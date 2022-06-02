@@ -1,0 +1,169 @@
+#include<stdio.h>
+#include"stdlib.h"
+int language;
+struct Acount
+{
+	char name[100];
+	char Carid[19];
+	char username[25];
+	char tel[12];
+	char password[7];
+	float money;
+	struct Acount*next;
+};
+typedef struct Acount Acount;
+Acount*head=NULL;//指向头结点的指针
+Acount*tail=NULL;//指向尾结点的指针 
+void signUp()
+{
+	Acount a;
+	struct Acount*node=(struct Acount*)malloc(sizeof(struct Acount));//申请一块内存空间，将其地址赋值给指针node 
+	if(language==1)
+	printf("请输入姓名:\n");
+	else if(language==2)
+	printf("Input name:\n");
+	scanf("%s",node->name);
+	
+	if(language==1)
+	printf("请输入身份证:\n");
+	else if(language==2)
+	printf("Input ID:\n");
+	scanf("%s",node->Carid);
+	
+	if(language==1)
+	printf("请输入卡号:\n");
+	else if(language==2)
+	printf("Input Card username:\n");
+	scanf("%s",node->username);
+	
+	if(language==1)
+	printf("请输入tel:\n");
+	else if(language==2)
+	printf("Input tel:\n");
+	scanf("%s",node->tel);
+	
+	if(language==1)
+	printf("请输入密码:\n");
+	else if(language==2)
+	printf("Input password:\n");
+	scanf("%s",node->password);
+	
+	node->money=0.0f;
+	node->next=NULL;
+	//将结点添加到链表
+	if(head==NULL)
+	{
+		head=node;
+		tail=node;
+	} 
+	else
+	{
+		tail->next=node;
+		tail=node;
+	}
+	if(language==1)
+	printf("添加成功！\n");
+	else if(language==2)
+	printf("added!\n");
+	
+}
+
+void signIn()
+{
+	
+}
+
+void showMenu()
+{
+	while(1)
+	{
+		system("cls");
+		if(language==2)
+	{
+		printf("press 1,signIn\n");
+	    printf("press 2,signUp\n");
+	    printf("press 3,singn out\n");
+	}
+	else if(language==1)
+	{
+		printf("按1,开户\n");
+	    printf("按2,登陆\n");
+	    printf("按3,退出\n");
+	}
+	int n;
+	scanf("%d",&n);
+	if(n==1)
+	{
+		signUp();
+	}
+	else if(n==2)
+	{
+		signIn();
+	}
+	else if(n==3)
+	return;
+	}	
+}
+
+void loadDate()
+{
+	FILE*fp=fopen("D:/atm.txt","r");
+	if(fp!=NULL)
+	{
+		while(!feof(fp))
+		{
+		 Acount*newNode=(Acount*)malloc(sizeof(Acount));
+		 newNode->next=NULL;
+		 fscanf(fp,"%s %s %s %s %s\n",newNode->name,newNode->Carid,newNode->username,newNode->tel,newNode->password);
+		 if(head==NULL)
+		 {
+			head=newNode;
+			tail=newNode;
+		 }
+		else
+		{
+			tail->next=newNode;
+			tail=newNode;
+		}
+		}
+		fclose(fp);
+	printf("加载成功!\n");
+	}
+}
+void printflist()
+{
+	 Acount*curp=head;
+	while(curp!=NULL)
+	{
+		printf("%s %s %s %s %s\n",curp->name,curp->Carid,curp->username,curp->tel,curp->password);
+		curp=curp->next;
+	}
+}
+void seveDate()
+{
+	FILE*fp=fopen("D:/atm.txt","w");
+	if(fp==NULL)
+	return;
+	Acount*curp=head;
+	while(curp!=NULL)
+	{
+		fprintf(fp,"%s\t%s\t%s\t%s\t%s\n",curp->name,curp->Carid,curp->username,curp->tel,curp->password);
+		curp=curp->next;
+	}
+	
+}
+int main()
+{
+	printf("欢迎来到王者银行\n");
+	printf("Welcome to XXX ban\n");
+	
+
+	printf("按1,中文\n");
+	printf("按2,英文\n");
+	scanf("%d",&language);
+	showMenu();
+	printflist();
+	loadDate();
+	seveDate();
+	return 0;	
+}
