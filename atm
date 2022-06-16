@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include"stdlib.h"
+#include"string.h"
 int language;
 struct Acount
 {
@@ -7,13 +8,14 @@ struct Acount
 	char Carid[19];
 	char username[25];
 	char tel[12];
-	char password[7];
+	char password[10];
 	float money;
 	struct Acount*next;
 };
 typedef struct Acount Acount;
 Acount*head=NULL;//指向头结点的指针
 Acount*tail=NULL;//指向尾结点的指针 
+Acount*curAcount=NULL;//记录当前记录 
 void signUp()
 {
 	Acount a;
@@ -31,7 +33,7 @@ void signUp()
 	scanf("%s",node->Carid);
 	
 	if(language==1)
-	printf("请输入卡号:\n");
+	printf("请输入账号:\n");
 	else if(language==2)
 	printf("Input Card username:\n");
 	scanf("%s",node->username);
@@ -68,10 +70,79 @@ void signUp()
 	
 }
 
-void signIn()
+int findAcount(Acount a)
 {
 	
+	Acount *cur=head;
+	while(cur!=NULL)
+	{
+		if((strcmp(cur->username,a.username)==0)&&(strcmp(cur->password,a.password)==0))
+		{
+			curAcount=cur;
+			return 1;
+		}
+		cur=cur->next;
+	}
+	return 0;
 }
+void updatePassword()
+{
+	if(language==1)
+	printf("请输入旧密码:\n");
+	else if(language==2)
+	printf("Please enter your old password:\n");
+	char oldpassword[100];
+	scanf("%s",oldpassword);
+	if(strcmp(oldpassword,curAcount->password)==0)
+	{
+		if(language==1)
+		printf("请输入新密码:\n");
+		else if(language==2)
+		printf("Please enter a new password:\n");
+		scanf("%s",curAcount->password);
+		if(language==1)
+		printf("修改成功!\n");
+		else if(language==2)
+		printf("Modification succeeded!\n");
+	}
+	else if(language==1)
+	printf("密码错误，不能修改!\n");
+	else if(language==2)
+	printf("Password error cannot be repaired!\n");
+}
+
+void signIn()
+{
+	for(int i=0;i<3;i++)
+	{
+		Acount a;
+		if(language==1)
+		 printf("请输入账号:\n");
+		 else if(language==2)
+		 printf("Input Card username:\n");
+		 scanf("%s",a.username);
+		 if(language==1)
+		 printf("请输入密码:\n");
+		 else if(language==2)
+		 printf("Input password:\n");
+	 	 scanf("%s",a.password);
+		 if(findAcount(a))
+		{
+			if(language==1)
+			printf("登录成功!\n");
+			else if("language==2")
+			printf("Login succeeded!\n");
+			updatePassword();
+			break;
+		}
+		else
+		if(language==1)
+		printf("登录失败!\n");
+		else if(language==2)
+		printf("Login failed!\n");
+	}
+}
+
 
 void showMenu()
 {
@@ -105,31 +176,7 @@ void showMenu()
 	}	
 }
 
-void loadDate()
-{
-	FILE*fp=fopen("D:/atm.txt","r");
-	if(fp!=NULL)
-	{
-		while(!feof(fp))
-		{
-		 Acount*newNode=(Acount*)malloc(sizeof(Acount));
-		 newNode->next=NULL;
-		 fscanf(fp,"%s %s %s %s %s\n",newNode->name,newNode->Carid,newNode->username,newNode->tel,newNode->password);
-		 if(head==NULL)
-		 {
-			head=newNode;
-			tail=newNode;
-		 }
-		else
-		{
-			tail->next=newNode;
-			tail=newNode;
-		}
-		}
-		fclose(fp);
-	printf("加载成功!\n");
-	}
-}
+
 void printflist()
 {
 	 Acount*curp=head;
@@ -152,18 +199,48 @@ void seveDate()
 	}
 	
 }
+void loadDate()
+{
+	FILE*fp=fopen("D:/atm.txt","r");
+	if(fp!=NULL)
+	{
+		while(!feof(fp))
+		{
+		 Acount*newNode=(Acount*)malloc(sizeof(Acount));
+		 newNode->next=NULL;
+		 fscanf(fp,"%s %s %s %s %s\n",newNode->name,newNode->Carid,newNode->username,newNode->tel,newNode->password);
+		 if(head==NULL)
+		 {
+			head=newNode;
+			tail=newNode;
+		 }
+		else
+		{
+			tail->next=newNode;
+			tail=newNode;
+		}
+		}
+		 fclose(fp);
+		 if(language==1)
+	     printf("加载成功!\n");
+	     else if(language==2)
+	     printf("Load successful!\n");
+	}
+	
+}
+
 int main()
 {
 	printf("欢迎来到王者银行\n");
 	printf("Welcome to XXX ban\n");
 	
-
 	printf("按1,中文\n");
 	printf("按2,英文\n");
 	scanf("%d",&language);
+	loadDate();
 	showMenu();
 	printflist();
-	loadDate();
 	seveDate();
+	
 	return 0;	
 }
