@@ -30,7 +30,7 @@ Account*curpAccount=NULL;//记录当前记录
 Account*otherAccount=NULL;//对方账户 
 void loadData()
 {
-	FILE*fp=fopen("F:/atm.txt","r");
+	FILE*fp=fopen("D:/atm.txt","r");
 	if(fp!=NULL)
 	{
 		while(!feof(fp))
@@ -155,11 +155,11 @@ void drawmoney()
 {
 	if(language==1)
 	{
-		printf("请输入取款金额:\n");
+		printf("请输入取款金额:		//取款金额不得超过10000\n");
 	}
 	else if(language==2)
 	{
-		printf("Please enter the withdrawal amount:\n");
+		printf("Please enter the withdrawal amount:	//The amount shall not exceed 10000\n");
 	}
 	int money;
 	scanf("%d",&money);
@@ -207,11 +207,11 @@ void saveMoney()
 {
 	if(language==1)
 	{
-		printf("请输入存款金额:\n");
+		printf("请输入存款金额:		//存款金额上限为10000\n");
 	}
 	else if(language==2)
 	{
-		printf("Please enter the deposit amount:\n");
+		printf("Please enter the deposit amount:		//Deposit limit is 10000\n");
 	}
 	int money;
 	scanf("%d",&money);
@@ -273,11 +273,11 @@ void transfer()
 	{
 		if(language==1)
 		{
-			printf("请输入转账金额:\n");
+			printf("请输入转账金额:		//转账金额上限为50000\n");
 		}
 		else if(language==2)
 		{
-			printf("Please enter the transfer amount:\n");
+			printf("Please enter the transfer amount:		//Transfer limit is 50000\n");
 		}
 		int money;
 		scanf("%d",&money);
@@ -298,7 +298,7 @@ void transfer()
 	        Node->next=NULL;
 			strcpy(Node->username,curpAccount->username);
 			Node->timestamp=time(NULL);
-			Node->type=1;
+			Node->type=0;
 			Node->amount=money;
 			//添加交易记录结点到链表 
 			if(Head==NULL)
@@ -310,6 +310,23 @@ void transfer()
 			{
 				Tail->next=Node;
 				Tail=Node;
+			}
+			
+			Transaction*newnode=(Transaction*)malloc(sizeof(Transaction));
+			newnode->next;
+			strcpy(newnode->username,otherAccount->username);
+			newnode->timestamp=time(NULL);
+			newnode->type=1;
+			newnode->amount=money;
+			if(Head==NULL)
+			{
+				Head==newnode;
+				Tail=newnode;
+			}
+			else
+			{
+				Tail->next=newnode;
+				Tail=newnode;
 			}
 		}
 		else if(language==1)
@@ -336,25 +353,25 @@ void homepage()
 	system("cls");
 	if(language==1)
 	{
-		printf("是否修改密码	//修改密码请按1\n");
+		printf("是否修改密码	//修改密码请按3,否则请按4\n");
 	}
 	else if(language==2)
 	{
-		printf("To change the password	//press 1\n");
+		printf("To change the password	//press 3 or 4\n");
 	}
 	int n;
 	scanf("%d",&n);
-	if(n==1)
+	if(n==3)
 	{
 		updatapassword();
 	}
 	if(language==1)
 	{
-		printf("是否取款	//取款请按0\n");
+		printf("是否取款	//取款请按0,否则请按4\n");
 	}
 	else if(language==2)
 	{
-		printf("Whether to withdraw	//press 0\n");
+		printf("Whether to withdraw	//press 0 or 4\n");
 	}
 	int x;
 	scanf("%d",&x);
@@ -364,11 +381,11 @@ void homepage()
 	}
 	if(language==1)
 	{
-		printf("是否存款	//存款请按1\n");
+		printf("是否存款	//存款请按1,否则请按4\n");
 	}
 	else if(language==2)
 	{
-		printf("Depost or not	//press 1\n");
+		printf("Depost or not	//press 1 or 4\n");
 	}
 	scanf("%d",&x);
 	if(x==1)
@@ -377,15 +394,15 @@ void homepage()
 	}
 	if(language==1)
 	{
-		printf("是否需要转账	//转账请按1\n");
+		printf("是否需要转账	//转账请按2,否则请按4\n");
 	}
 	else if(language==2)
 	{
-		printf("Transfer required	//press 1\n");
+		printf("Transfer required	//press 2 or 4\n");
 	}
 	int m;
 	scanf("%d",&m);
-	if(m==1)
+	if(m==2)
 	{
 		transfer();
 	}
@@ -465,9 +482,19 @@ void printflist()
 		curp=curp->next;
 	}
 }
+void printfTransaction()
+{
+	Transaction*cur=Head;
+	printf("交易记录:\n");
+	while(cur!=NULL)
+	{
+		printf("%s %ld %d %d\n",cur->username,cur->timestamp,cur->type,cur->amount);
+		cur=cur->next;
+	}
+}
 void saveData()
 {
-	FILE*fp=fopen("F:/atm.txt","w");
+	FILE*fp=fopen("D:/atm.txt","w");
 	if(fp==NULL)
 	return;
 	Account*curp=head;
@@ -490,7 +517,7 @@ void releaseMemory()
 }
 void saveTransaction()
 {
-	FILE*fp=fopen("F:/Transaction.txt","w");
+	FILE*fp=fopen("D:/Transaction.txt","w");
 	if(fp!=NULL)
 	{
 		Transaction*cur=Head;
@@ -504,7 +531,7 @@ void saveTransaction()
 }
 void loadTransaction()
 {
-	FILE*fp=fopen("F:/Transaction.txt","r");
+	FILE*fp=fopen("D:/Transaction.txt","r");
 	if(fp!=NULL)
 	{
 		while(!feof(fp))
@@ -541,8 +568,8 @@ void loadTransaction()
 }
 int main()
 {
-	printf("迎接来到XX银行!\n");
-	printf("Welcome to XX bank!\n");
+	printf("*****迎接来到XX银行!*****\n");
+	printf("*****Welcome to XX bank!*****\n");
 	printf("按1,中文\n");
 	printf("按2,英语\n");
 	scanf("%d",&language);
@@ -551,6 +578,7 @@ int main()
 	showMenu();
 	printflist();
 	saveData();
+	printfTransaction();
 	saveTransaction();
 	releaseMemory(); 
 }
